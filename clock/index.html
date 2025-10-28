@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Time Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            background: #ffffff;
+            padding: 2%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .widget-container {
+            width: 100%;
+            max-width: 100%;
+            background: #ffffff;
+            border-radius: clamp(8px, 2vw, 12px);
+            padding: clamp(20px, 5vw, 32px);
+            position: relative;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .content-wrapper {
+            position: relative;
+        }
+        
+        .header-row {
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 2vw, 12px);
+            margin-bottom: clamp(16px, 4vw, 24px);
+            padding-bottom: clamp(12px, 3vw, 16px);
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .icon {
+            font-size: clamp(20px, 5vw, 28px);
+        }
+        
+        .title {
+            font-size: clamp(16px, 4vw, 20px);
+            font-weight: 600;
+            color: #9b8579;
+            letter-spacing: 0.3px;
+        }
+        
+        .time-section {
+            background: #f9fafb;
+            border-radius: clamp(6px, 1.5vw, 8px);
+            padding: clamp(16px, 4vw, 24px);
+            margin-bottom: clamp(12px, 3vw, 16px);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .time-label {
+            font-size: clamp(11px, 2.5vw, 13px);
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: clamp(8px, 2vw, 10px);
+        }
+        
+        .time-display {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+        }
+        
+        .time {
+            font-size: clamp(40px, 10vw, 56px);
+            font-weight: 700;
+            color: #1f2937;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -1px;
+        }
+        
+        .period {
+            font-size: clamp(16px, 4vw, 20px);
+            font-weight: 600;
+            color: #6b7280;
+            margin-left: clamp(6px, 1.5vw, 8px);
+        }
+        
+        .date-section {
+            background: #f9fafb;
+            border-radius: clamp(6px, 1.5vw, 8px);
+            padding: clamp(16px, 4vw, 24px);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .date-row {
+            margin-bottom: clamp(8px, 2vw, 12px);
+        }
+        
+        .date-label {
+            font-size: clamp(11px, 2.5vw, 13px);
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .weekday {
+            font-size: clamp(13px, 3vw, 15px);
+            font-weight: 600;
+            color: #1f2937;
+            text-align: center;
+        }
+        
+        .date {
+            font-size: clamp(15px, 3.5vw, 18px);
+            font-weight: 500;
+            color: #1f2937;
+            text-align: center;
+        }
+        
+        .greeting-footer {
+            margin-top: clamp(12px, 3vw, 16px);
+            padding-top: clamp(12px, 3vw, 16px);
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        
+        .greeting {
+            font-size: clamp(12px, 3vw, 14px);
+            font-weight: 500;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 300px) {
+            .time {
+                font-size: 36px;
+            }
+        }
+        
+        @media (min-width: 500px) {
+            .time {
+                font-size: 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <div class="content-wrapper">
+            <div class="header-row">
+                <span class="icon">🕐</span>
+                <span class="title">Current Time</span>
+            </div>
+            
+            <div class="time-section">
+                <div class="time-label">Time</div>
+                <div class="time-display">
+                    <span class="time" id="time"></span>
+                    <span class="period" id="period"></span>
+                </div>
+            </div>
+            
+            <div class="date-section">
+                <div class="date-row">
+                    <div class="date-label">Day</div>
+                    <div class="weekday" id="weekday"></div>
+                </div>
+                <div class="date" id="date"></div>
+            </div>
+            
+            <div class="greeting-footer">
+                <div class="greeting" id="greeting"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getGreeting(hour) {
+            if (hour < 5) return 'Good night';
+            if (hour < 12) return 'Good morning';
+            if (hour < 17) return 'Good afternoon';
+            if (hour < 21) return 'Good evening';
+            return 'Good night';
+        }
+
+        function updateWidget() {
+            const now = new Date();
+            const hours = now.getHours();
+            
+            // Greeting
+            document.getElementById('greeting').textContent = getGreeting(hours);
+            
+            // Weekday
+            const weekday = now.toLocaleDateString('en-US', { weekday: 'long' });
+            document.getElementById('weekday').textContent = weekday;
+            
+            // Date
+            const date = now.toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+            document.getElementById('date').textContent = date;
+            
+            // Time
+            const minutes = now.getMinutes();
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            const displayMinutes = minutes.toString().padStart(2, '0');
+            
+            document.getElementById('time').textContent = `${displayHours}:${displayMinutes}`;
+            document.getElementById('period').textContent = period;
+        }
+
+        // Initial update
+        updateWidget();
+        
+        // Update every second
+        setInterval(updateWidget, 1000);
+        
+        // Add fade-in animation on load
+        document.querySelector('.widget-container').classList.add('fade-in');
+    </script>
+</body>
+</html>
