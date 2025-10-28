@@ -153,23 +153,103 @@
             padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 20px);
         }
         
+        .settings-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        
+        .settings-overlay.open {
+            display: flex;
+        }
+        
+        .settings-modal {
+            background: #ffffff;
+            border-radius: clamp(8px, 2vw, 12px);
+            padding: clamp(24px, 6vw, 32px);
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: clamp(20px, 5vw, 24px);
+            padding-bottom: clamp(12px, 3vw, 16px);
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .settings-header-title {
+            font-size: clamp(16px, 4vw, 18px);
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: clamp(24px, 6vw, 28px);
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        
+        .close-btn:hover {
+            color: #1f2937;
+        }
+        
         .settings {
             background: #f9fafb;
             border-radius: clamp(6px, 1.5vw, 8px);
             padding: clamp(16px, 4vw, 20px);
             border: 1px solid #e5e7eb;
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: all 0.3s ease;
         }
         
-        .settings.open {
-            max-height: 500px;
-            opacity: 1;
-            margin-top: clamp(12px, 3vw, 16px);
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: clamp(12px, 3vw, 16px);
         }
         
+        .setting-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .settings-title {
+            font-size: clamp(11px, 2.5vw, 13px);
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: clamp(12px, 3vw, 16px);
+        }
         .settings-title {
             font-size: clamp(11px, 2.5vw, 13px);
             font-weight: 600;
@@ -258,41 +338,33 @@
             <button class="btn settings-btn" id="settingsBtn">⚙️</button>
         </div>
         
-        <div class="settings" id="settingsPanel">
-            <div class="settings-title">Settings</div>
-            <div class="setting-row">
-                <span class="setting-label">Focus Time</span>
-                <input type="number" class="setting-input" id="workInput" value="25" min="1" max="60">
-            </div>
-            <div class="setting-row">
-                <span class="setting-label">Short Break</span>
-                <input type="number" class="setting-input" id="shortBreakInput" value="5" min="1" max="30">
-            </div>
-            <div class="setting-row">
-                <span class="setting-label">Long Break</span>
-                <input type="number" class="setting-input" id="longBreakInput" value="15" min="1" max="60">
-            </div>
-            <div class="stats">
-                <span class="stats-text">Sessions completed: <span class="stats-number" id="sessionCount">0</span></span>
-            </div>
+        <div class="stats" style="margin-top: clamp(12px, 3vw, 16px); padding-top: clamp(12px, 3vw, 16px); border-top: 1px solid #e5e7eb; text-align: center;">
+            <span class="stats-text">Sessions completed: <span class="stats-number" id="sessionCount">0</span></span>
         </div>
-            <div class="settings-title">Settings</div>
-            <div class="setting-row">
-                <span class="setting-label">Focus Time</span>
-                <input type="number" class="setting-input" id="workInput" value="25" min="1" max="60">
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settings-modal">
+            <div class="settings-header">
+                <span class="settings-header-title">Settings</span>
+                <button class="close-btn" id="closeBtn">×</button>
             </div>
-            <div class="setting-row">
-                <span class="setting-label">Short Break</span>
-                <input type="number" class="setting-input" id="shortBreakInput" value="5" min="1" max="30">
+            <div class="settings">
+                <div class="setting-row">
+                    <span class="setting-label">Focus Time (min)</span>
+                    <input type="number" class="setting-input" id="workInput" value="25" min="1" max="60">
+                </div>
+                <div class="setting-row">
+                    <span class="setting-label">Short Break (min)</span>
+                    <input type="number" class="setting-input" id="shortBreakInput" value="5" min="1" max="30">
+                </div>
+                <div class="setting-row">
+                    <span class="setting-label">Long Break (min)</span>
+                    <input type="number" class="setting-input" id="longBreakInput" value="15" min="1" max="60">
+                </div>
             </div>
-            <div class="setting-row">
-                <span class="setting-label">Long Break</span>
-                <input type="number" class="setting-input" id="longBreakInput" value="15" min="1" max="60">
-            </div>
-            <div class="stats">
-                <span class="stats-text">Sessions completed: <span class="stats-number" id="sessionCount">0</span></span>
-            </div>
-        </div>
+
     </div>
 
     <script>
@@ -310,15 +382,27 @@
         const pauseBtn = document.getElementById('pauseBtn');
         const resetBtn = document.getElementById('resetBtn');
         const settingsBtn = document.getElementById('settingsBtn');
-        const settingsPanel = document.getElementById('settingsPanel');
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const closeBtn = document.getElementById('closeBtn');
         const workInput = document.getElementById('workInput');
         const shortBreakInput = document.getElementById('shortBreakInput');
         const longBreakInput = document.getElementById('longBreakInput');
         const sessionCount = document.getElementById('sessionCount');
 
-        function toggleSettings() {
-            settingsPanel.classList.toggle('open');
+        function openSettings() {
+            settingsOverlay.classList.add('open');
         }
+        
+        function closeSettings() {
+            settingsOverlay.classList.remove('open');
+        }
+        
+        // Close modal when clicking outside
+        settingsOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsOverlay) {
+                closeSettings();
+            }
+        });
 
         function getTime(mode) {
             switch(mode) {
@@ -435,7 +519,8 @@
         startBtn.addEventListener('click', start);
         pauseBtn.addEventListener('click', pause);
         resetBtn.addEventListener('click', reset);
-        settingsBtn.addEventListener('click', toggleSettings);
+        settingsBtn.addEventListener('click', openSettings);
+        closeBtn.addEventListener('click', closeSettings);
 
         // Update timer when settings change (only when not running)
         [workInput, shortBreakInput, longBreakInput].forEach(input => {
